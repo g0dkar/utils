@@ -59,7 +59,6 @@ public class StringUtils {
 	 * @return Encoded String
 	 * @see URLEncoder
 	 * @see URLEncoder#encode(String, String)
-	 * @throws UnsupportedEncodingException Might be thrown by the {@link URLEncoder}
 	 */
 	public static String encodeURLComponent(final String urlComponent, final String encoding) {
 		try {
