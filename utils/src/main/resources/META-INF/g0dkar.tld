@@ -1,0 +1,45 @@
+<taglib version="2.0" xmlns="http://java.sun.com/xml/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+	<uri>https://responde.ai/taglib</uri>
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>2.0</jsp-version>
+	<short-name>g0dkar Utils TagLib</short-name>
+	
+	<tag>
+		<name>out</name>
+		<tag-class>g0dkar.utils.jspTags.SafeOutTag</tag-class>
+		<body-content>scriptless</body-content>
+		
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+			<type>java.lang.String</type>
+			<fragment>false</fragment>
+			<rtexprvalue>true</rtexprvalue>
+			<description>What will be printed</description>
+		</attribute>
+		
+		<attribute>
+			<name>default</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+			<fragment>false</fragment>
+			<rtexprvalue>true</rtexprvalue>
+			<description>What should be printed if "value" is null</description>
+		</attribute>
+		
+		<attribute>
+			<name>strip</name>
+			<required>false</required>
+			<type>java.util.Boolean</type>
+			<fragment>false</fragment>
+			<rtexprvalue>true</rtexprvalue>
+			<description>Strip *ALL* HTML? (default = false)</description>
+		</attribute>
+	</tag>
+	
+	<tag>
+		<name>markdown</name>
+		<tag-class>g0dkar.utils.jspTags.MarkdownTag</tag-class>
+		<body-content>scriptless</body-content>
+	</tag>
+</taglib>

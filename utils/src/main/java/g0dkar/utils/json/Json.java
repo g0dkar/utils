@@ -2,6 +2,9 @@ package g0dkar.utils.json;
 
 import java.lang.reflect.Modifier;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,12 +22,23 @@ import com.google.gson.JsonParseException;
  */
 public class Json {
 	/** {@link Gson} instance pre-built and used by this class. */
-	public static final Gson GSON = new GsonBuilder()
-			.excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.STATIC)
-			.registerTypeAdapter(Date.class, new GsonDateConverter())
-			.registerTypeAdapter(Calendar.class, new GsonCalendarConverter())
-			.registerTypeAdapter(Instant.class, new GsonInstantConverter())
-			.create();
+	public static final Gson GSON = builder().create();
+	
+	/**
+	 * Builds a nice, default {@link GsonBuilder} ignoring {@code transient} and {@code static} fields and
+	 * supports ISO {@link Date}, {@link Calendar} and Java 8 Time API types
+	 * @return
+	 */
+	public static GsonBuilder builder() {
+		return new GsonBuilder()
+				.excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.STATIC)
+				.registerTypeAdapter(Date.class, new GsonDateConverter())
+				.registerTypeAdapter(Calendar.class, new GsonCalendarConverter())
+				.registerTypeAdapter(Instant.class, new GsonInstantConverter())
+				.registerTypeAdapter(LocalDate.class, new GsonLocalDateConverter())
+				.registerTypeAdapter(LocalTime.class, new GsonLocalTimeConverter())
+				.registerTypeAdapter(LocalDateTime.class, new GsonLocalDateTimeConverter());
+	}
 	
 	/**
 	 * Turns an Object into {@link Gson#toJson(Object) json} ignoring {@code static} and fields marked as {@code transient} (by explicitly
