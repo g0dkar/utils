@@ -17,7 +17,7 @@ import org.infinispan.stats.CacheContainerStats;
  */
 @ApplicationScoped
 public class CacheService {
-	@Resource(lookup = "java:/cache/your-cache")
+	@Resource(lookup = "java:/cache/respondeai")
 	private EmbeddedCacheManager cacheManager;
 	
 	public EmbeddedCacheManager getManager() {
