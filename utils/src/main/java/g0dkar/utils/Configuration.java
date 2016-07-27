@@ -12,12 +12,12 @@ import java.util.TimeZone;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 import org.infinispan.Cache;
 import org.slf4j.Logger;
 
+import br.com.caelum.vraptor.environment.Environment;
 import g0dkar.utils.cache.CacheService;
 import g0dkar.utils.jpa.PersistenceService;
 
@@ -32,36 +32,42 @@ public class Configuration {
 	private final Logger log;
 	private final PersistenceService ps;
 	private final CacheService cs;
+	private final Environment env;
 	
 	/** @deprecated CDI */ @Deprecated
-	Configuration() { this(null, null, null); }
+	Configuration() { this(null, null, null, null); }
 	
 	@Inject
-	public Configuration(final PersistenceService ps, final CacheService cs, final Logger log) {
+	public Configuration(final PersistenceService ps, final CacheService cs, final Logger log, final Environment env) {
 		this.ps = ps;
 		this.cs = cs;
 		this.log = log;
+		this.env = env;
 	}
 	
 	/**
 	 * Return something from the configurations map.
 	 * 
-	 * @param name {@code dot.path.to.conf}
+	 * @param name Configuration name
 	 * @return The configuration value or {@code null} if it doesn't exist
 	 */
 	public String get(final String name) {
 		final Cache<String, String> cache = cs.getCache("configuration");
 		
 		if (!cache.containsKey(name)) {
-			final Query query = ps.createQuery("SELECT value FROM Configuration WHERE name = :name").setParameter("name", name);
-			query.setHint("org.hibernate.cacheable", false);
+			String value = env.get(name);
 			
-			try {
-				final String value = (String) query.getSingleResult();
-				cache.put(name, value);
-			} catch (final NoResultException nre) {
-				return null;
+			if (value == null) {
+				final Query query = ps.createQuery("SELECT value FROM Configuration WHERE name = :name").setParameter("name", name);
+				query.setHint("org.hibernate.cacheable", false);
+				value = (String) query.getSingleResult();
 			}
+			
+			if (value != null) {
+				cache.put(name, value);
+			}
+			
+			return value;
 		}
 		
 		return cache.get(name);

@@ -1,7 +1,9 @@
 package g0dkar.utils.jpa;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,9 +36,30 @@ public class PersistenceService {
 	public void persist(final Object entity) {
 		entityManager.persist(entity);
 	}
+	
+	public void persist(final Collection<?> entities) {
+		for (final Object entity : entities) {
+			persist(entity);
+		}
+	}
 
 	public <T> T merge(final T entity) {
 		return entityManager.merge(entity);
+	}
+	
+	public <T> Collection<T> merge(final Collection<T> entities) {
+		Collection<T> merged;
+		try {
+			merged = entities.getClass().getConstructor().newInstance();
+		} catch (final Exception e) {
+			merged = new LinkedList<>();
+		}
+		
+		for (final T entity : entities) {
+			merged.add(merge(entity));
+		}
+		
+		return merged;
 	}
 
 	public void remove(final Object entity) {
